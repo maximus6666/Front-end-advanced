@@ -14,8 +14,6 @@ function getPairs(arr) {
   const result = [pair1, pair2, pair3];
   return result;
 }
-const pairs = getPairs(students);
-console.log(pairs);
 
 // 2 Додаєм до пар теми
 function addProjectTheme(pairs, themes) {
@@ -28,8 +26,6 @@ function addProjectTheme(pairs, themes) {
 
   return result;
 }
-const studentsAndthemes = addProjectTheme(pairs, themes);
-console.log(studentsAndthemes);
 
 //3 Додаєм до студентів оцінки
 function addMarkToStudent(students, marks) {
@@ -43,8 +39,6 @@ function addMarkToStudent(students, marks) {
 
   return result;
 }
-const studentsAndMarks = addMarkToStudent(students, marks);
-console.log(studentsAndMarks);
 
 //4 Додаєм випадкову оцінку 
 function addRandomMark(students) {
@@ -58,5 +52,13 @@ function addRandomMark(students) {
 
   return result;
 }
+
+const pairs = getPairs(students);
+const studentsAndthemes = addProjectTheme(pairs, themes);
+const studentsAndMarks = addMarkToStudent(students, marks);
 const studentsWithRandomMarks = addRandomMark(studentsAndthemes);
+
+console.log(pairs);
+console.log(studentsAndthemes);
+console.log(studentsAndMarks);
 console.log(studentsWithRandomMarks);
