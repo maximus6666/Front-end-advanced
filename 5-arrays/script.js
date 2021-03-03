@@ -68,7 +68,7 @@ function countPositiveNumbers(...numbers) {
   return result.length;
 }
 
-//6 Функція, яка яка відфільтрує усі елементи в масиві 
+//6 Функція, яка відфільтрує усі елементи в масиві 
 //та залишить тільки ті, які діляться на ціло на 5
 function getDividedByFive(...numbers) {
   const result = numbers.filter((number) => {
