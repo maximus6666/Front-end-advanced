@@ -73,7 +73,6 @@ function getAverageMark(student) {
   return console.log('Student not found');
 }
 
-
 //3. Функція, яка повертає інформацію загального виду по переданому студенту
 function getStudentInfo(student) {
   if (student) {
