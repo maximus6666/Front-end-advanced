@@ -26,26 +26,11 @@ const students = [{
 
 // Допоміжні функції
 function getAverage(...numbers) {
-  const integerArr = numbers.filter((number) => Number.isInteger(number));
-  const sum = integerArr.reduce((sum, number) => {
+  const sum = numbers.reduce((sum, number) => {
     return sum + number;
   }, 0);
 
-  return +(sum / integerArr.length).toFixed(2);
-}
-
-function countLetter(letterStr, wordStr) {
-  let counter = 0;
-  const userWord = wordStr.toLowerCase();
-  const userLetter = letterStr.toLowerCase();
-
-  for (let i = 0; i < userWord.length; i++) {
-    if (userLetter === userWord[i]) {
-      counter++;
-    }
-  }
-
-  return counter;
+  return +(sum / numbers.length).toFixed(2);
 }
 
 //1. Функція, яка повертає список предметів для конкретного студента
@@ -60,38 +45,28 @@ function getSubjects(student) {
 
 //2. Функція, яка рахує середню оцінку по усім предметам для переданого студента
 function getAverageMark(student) {
-  if (student) {
-    const studentMarks = Object.values(student.subjects);
+  const studentMarks = Object.values(student.subjects);
 
-    const studentMarksList = studentMarks.reduce((list, mark) => {
-      return list.concat(...mark);
-    }, []);
+  const studentMarksList = studentMarks.reduce((list, mark) => {
+    return list.concat(...mark);
+  }, []);
 
-    return getAverage(...studentMarksList);
-  }
-
-  return console.log('Student not found');
+  return getAverage(...studentMarksList);
 }
 
 //3. Функція, яка повертає інформацію загального виду по переданому студенту
 function getStudentInfo(student) {
-  if (student) {
-    return {
-      course: student.course,
-      name: student.name,
-      averageMark: getAverageMark(student)
-    };
-  }
-
-  return console.log('Student not found');
+  return {
+    course: student.course,
+    name: student.name,
+    averageMark: getAverageMark(student)
+  };
 }
 
 //4. Функція, яка повертає імена студентів у алфавітному порядку
 function getStudentsNames(students) {
-  const names = [];
-
-  students.forEach(student => {
-    names.push(student.name);
+  const names = students.map(student => {
+    return student.name;
   });
 
   return names.sort();
@@ -116,14 +91,19 @@ function getBestStudent(students) {
 //6. Функція, яка повертає обє'кт, в якому ключі це букви у слові,
 // а значення – кількість їх повторень.
 function calculateWordLetters(word) {
-	const separatedWord = word.split('');
-	const result = {};
+  return word.split('').reduce((accumulator, letter) => {
+    const currentCount = accumulator[letter] || 0;
 
-	separatedWord.forEach((letter) => {
-		result[letter] = countLetter(letter, word);
-	});
-
-	return result;
+    return {
+      ...accumulator,
+      [letter]: currentCount + 1
+    };
+  }, {});
 }
 
-console.log(calculateWordLetters('тест'));
+console.log('1', getSubjects(students[0]));
+console.log('2', getAverageMark(students[0]));
+console.log('3', getStudentInfo(students[0]));
+console.log('4', getStudentsNames(students));
+console.log('5', getBestStudent(students));
+console.log('6', calculateWordLetters('тест'));
