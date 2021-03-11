@@ -25,31 +25,30 @@ function getMyTaxes(salary) {
 }
 
 //2.Функція, яка рахує скільки у середньому податків платять у кожній країні 
-function getMiddleTaxes(country) {
+function getMiddleTaxes() {
   return +(this.tax * this.middleSalary).toFixed(2);
 }
 
 //3.Функція, яка рахує, скільки всього податків платять у кожній країні
-function getTotalTaxes(country) {
+function getTotalTaxes() {
   return +(this.tax * this.middleSalary * this.vacancies).toFixed(2);
 }
 
 //4.Функція яка буде писати в консоль об'єкт виду: 
 //{ salary: number, taxes: number, profit: number } кожні 10 секунд. 
 //Значення salary – генеруйте випадковим чином у діапазоні 1500-2000.
-let timerId = 0;
 function getMySalary(country) {
-  const randomSalary = getRndInteger(1500, 2000);
-  const tax = getMyTaxes.call(country, randomSalary);
-  const result = {
-    salary: randomSalary,
-    taxes: tax,
-    profit: +(randomSalary - tax).toFixed(2),
-  };
+  setInterval(() => {
+    const randomSalary = getRndInteger(1500, 2000);
+    const tax = getMyTaxes.call(country, randomSalary);
+    const result = {
+      salary: randomSalary,
+      taxes: tax,
+      profit: +(randomSalary - tax).toFixed(2),
+    };
 
-console.log(result);
-
-timerId = setTimeout(getMySalary.bind(country, country), 10000);
+    return console.log(result);
+  }, 10000);
 }
 
 console.log('1.', getMyTaxes.call(ukraine, 50));
