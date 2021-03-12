@@ -47,7 +47,7 @@ function getMySalary(country) {
       profit: +(randomSalary - tax).toFixed(2),
     };
 
-    return console.log(result);
+    console.log(result);
   }, 10000);
 }
 
