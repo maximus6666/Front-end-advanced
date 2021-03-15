@@ -1,18 +1,15 @@
 //1 Функція, яка повертає масив випадкових цілих чисел
 function getRandomArray(length, min, max) {
-  let result = Array.from({
-    length
-  });
+  const result = Array(length).fill().map(() =>
+    Math.floor(Math.random() * (max - min + 1) + min));
 
-  return result.map((number) => Math.floor(Math.random() * (max - min + 1) + min));
+  return result;
 }
 
 //2 Функція, яка рахує середнє арифметичне
 function getAverage(...numbers) {
   const integerArr = numbers.filter((number) => Number.isInteger(number));
-  const sum = integerArr.reduce((sum, number) => {
-    return sum + number;
-  }, 0);
+  const sum = integerArr.reduce((sum, number) => sum + number, 0);
 
   return sum / integerArr.length;
 }
@@ -33,13 +30,7 @@ function getMedian(...numbers) {
 }
 
 //4 Функція фільтрує парні числа які передані як аргументи
-function filterEvenNumbers(...numbers) {
-  const result = numbers.filter((number) => {
-    return number % 2;
-  });
-
-  return result;
-}
+const filterEvenNumbers = (...numbers) => numbers.filter(num => num % 2);
 
 //5 Функція, яка рахує кількість чисел більших 0
 function countPositiveNumbers(...numbers) {
@@ -61,13 +52,8 @@ function getDividedByFive(...numbers) {
 }
 
 //7 Функція заміняє погані слова на зірочки (*)
-let badWordsBank = ['fuck', 'shit'];
-
-function replaceBadWords(string, ...badWords) {
-  if (badWords) {
-    badWordsBank = badWordsBank.concat(badWords);
-  }
-
+function replaceBadWords(string) {
+  const badWordsBank = ['fuck', 'shit'];
   const arrOfWords = string.split(' ');
 
   const censoredArr = arrOfWords.map((word) => {
@@ -95,7 +81,7 @@ function divideByThree(word) {
       result.push(curentLetter);
 
     } else {
-      let lastLetter = result.length - 1;
+      const lastLetter = result.length - 1;
 
       if (result[lastLetter].length === 3) {
         result.push(curentLetter);
