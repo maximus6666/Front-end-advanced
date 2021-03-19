@@ -15,9 +15,7 @@ function getRandomColor() {
 }
 
 function generateBlocks() {
-  for (let index = 0; index < 5; index++) {
-
-    for (let index = 0; index < 5; index++) {
+    for (let index = 0; index < 25; index++) {
       const block = document.createElement('div');
       block.classList.add('block');
       block.style.width = '50px';
@@ -25,7 +23,6 @@ function generateBlocks() {
       block.style.backgroundColor = getRandomColor();
       wrapper.append(block);
     }
-  }
 }
 
 function generateBlocksInterval() {
