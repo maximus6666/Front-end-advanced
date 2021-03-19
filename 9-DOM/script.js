@@ -1,10 +1,3 @@
-const wrapper = document.createElement('div');
-document.body.append(wrapper);
-
-wrapper.style.display = 'flex';
-wrapper.style.flexWrap = 'wrap';
-wrapper.style.width = '250px';
-
 function getRandomColor() {
   const rgbNumbers = [];
   for (let i = 0; i < 3; i++) {
@@ -15,14 +8,20 @@ function getRandomColor() {
 }
 
 function generateBlocks() {
-    for (let index = 0; index < 25; index++) {
-      const block = document.createElement('div');
-      block.classList.add('block');
-      block.style.width = '50px';
-      block.style.height = '50px';
-      block.style.backgroundColor = getRandomColor();
-      wrapper.append(block);
-    }
+  const wrapper = document.createElement('div');
+  document.body.append(wrapper);
+  wrapper.style.display = 'flex';
+  wrapper.style.flexWrap = 'wrap';
+  wrapper.style.width = '250px';
+  
+  for (let index = 0; index < 25; index++) {
+    const block = document.createElement('div');
+    block.classList.add('block');
+    block.style.width = '50px';
+    block.style.height = '50px';
+    block.style.backgroundColor = getRandomColor();
+    wrapper.append(block);
+  }
 }
 
 function generateBlocksInterval() {
