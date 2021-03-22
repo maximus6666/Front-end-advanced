@@ -34,4 +34,4 @@ function generateBlocksInterval() {
 }
 
 //generateBlocks();
-generateBlocksInterval();
+//generateBlocksInterval();
