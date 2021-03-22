@@ -1,4 +1,10 @@
 const keys = Array.from(document.querySelectorAll('.key'));
+const notes = document.querySelectorAll('audio');
+
+//Усуваємо мініпаузу на початку аудіо
+notes.forEach((note) => {
+  note.currentTime = 1;
+});
 
 function playNote(event) {
   keys.find((key) => {
@@ -18,7 +24,6 @@ function stopNote(event) {
       note.currentTime = 1;
       note.pause();
       key.classList.remove('active');
-
     }
   });
 }
