@@ -1,10 +1,9 @@
-const keys = document.querySelectorAll('.key');
+const keys = Array.from(document.querySelectorAll('.key'));
 
 function playNote(event) {
-  keys.forEach((key) => {
+  keys.find((key) => {
     if (key.dataset.audio === event.code) {
       const note = document.getElementById(event.code);
-      // console.log(e.code);
       note.play();
       key.classList.add('active');
     }
@@ -12,11 +11,11 @@ function playNote(event) {
 }
 
 function stopNote(event) {
-  keys.forEach((key) => {
+  keys.find((key) => {
     if (key.dataset.audio === event.code) {
       const note = document.getElementById(event.code);
       // console.log(e.code);
-      note.currentTime = 0;
+      note.currentTime = 1;
       note.pause();
       key.classList.remove('active');
 
@@ -24,5 +23,5 @@ function stopNote(event) {
   });
 }
 
-window.addEventListener('keydown', playNote);
-window.addEventListener('keyup', stopNote);
+document.addEventListener('keydown', playNote);
+document.addEventListener('keyup', stopNote);
