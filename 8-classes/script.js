@@ -19,7 +19,7 @@ class Student {
     if (this.dismissed) {
       return console.log(null);
     }
-    this.marksArray.push(mark);
+    this.marksArray = [...this.marksArray, mark];
   }
   getInfo() {
     return `Студент ${this.course}го курсу ${this.university}, ${this.fullName}`;
