@@ -7,25 +7,26 @@ notes.forEach((note) => {
 });
 
 function playNote(event) {
-  keys.find((key) => {
-    if (key.dataset.audio === event.code) {
-      const note = document.getElementById(event.code);
-      note.play();
-      key.classList.add('active');
-    }
-  });
+  const key = keys.find(key => key.dataset.audio === event.code);
+  if (!key) {
+    return;
+  }
+  
+  const note = document.getElementById(event.code);
+  note.play();
+  key.classList.add('active');
 }
 
 function stopNote(event) {
-  keys.find((key) => {
-    if (key.dataset.audio === event.code) {
-      const note = document.getElementById(event.code);
-      // console.log(e.code);
-      note.currentTime = 1;
-      note.pause();
-      key.classList.remove('active');
-    }
-  });
+  const key = keys.find(key => key.dataset.audio === event.code);
+  if (!key) {
+    return;
+  }
+
+  const note = document.getElementById(event.code);
+  note.pause();
+  note.currentTime = 1;
+  key.classList.remove('active');
 }
 
 document.addEventListener('keydown', playNote);
