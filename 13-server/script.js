@@ -10,12 +10,16 @@ const charactersArr = axios.get('https://swapi.dev/api/films/2')
   });
 
 const personsInfo = charactersArr.then((res) => {
-    return res.map(async (character) => await axios.get(character)
+    return res.map(async (character) =>{ 
+     let req = character.replace('http', 'https');
+      console.log(req);
+     return await axios.get(req)
       .then((res) => {
         return res.data;
-      }));
+      });});
   })
   .then((dataArr) => {
+    console.log(dataArr);
     const arr = dataArr.map((a) => a.then((data) => {
       return {
         name: data.name,
@@ -78,7 +82,7 @@ const hidePlanetBtn = document.querySelector('#hide-planet');
 
 async function getPlanetsInfo() {
   const nextBtn = document.createElement('button');
-  nextBtn.classList.add('next-planets-btn');
+  nextBtn.classList.add('next-planets');
   nextBtn.innerText = 'Next';
 
   const planetInfo = await axios.get('https://swapi.dev/api/planets/');
