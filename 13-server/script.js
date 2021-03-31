@@ -10,7 +10,7 @@ const charactersArr = axios.get('https://swapi.dev/api/films/2')
   });
 
 const personsInfo = charactersArr.then((res) => {
-    return res.map(async (character) => await axios.get(character.replaceAll('http', 'https'))
+    return res.map(async (character) => await axios.get(character)
       .then((res) => {
         return res.data;
       }));
