@@ -82,7 +82,7 @@ const hidePlanetBtn = document.querySelector('#hide-planet');
 
 async function getPlanetsInfo() {
   const nextBtn = document.createElement('button');
-  nextBtn.classList.add('next-planets');
+  nextBtn.classList.add('next-planets-btn');
   nextBtn.innerText = 'Next';
 
   const planetInfo = await axios.get('https://swapi.dev/api/planets/');
