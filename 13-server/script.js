@@ -1,62 +1,43 @@
 const showPeopleBtn = document.querySelector('#show-people');
 const hidePeopleBtn = document.querySelector('#hide-people');
 
-const charactersArr = axios.get('https://swapi.dev/api/films/2')
-  .then((res) => {
-    const data = res.data;
-    const characters = data.characters;
-
-    return characters;
-  });
-
-const personsInfo = charactersArr.then((res) => {
-    return res.map(async (character) =>{ 
-     let req = character.replace('http', 'https');
-      console.log(req);
-     return await axios.get(req)
-      .then((res) => {
-        return res.data;
-      });});
-  })
-  .then((dataArr) => {
-    console.log(dataArr);
-    const arr = dataArr.map((a) => a.then((data) => {
-      return {
-        name: data.name,
-        birthday: data.birth_year,
-        male: data.gender
-      };
-    }));
-    return arr;
-  });
-
 // Виводимо інформацію про персонажів 5 епізоду
-function getPersonsInfo(event) {
+async function getPersonsInfo(event) {
   if (event.target === showPeopleBtn) {
-    const wrapper = document.createElement('div');
-    wrapper.classList.add('wrapper');
+    const charactersArr = await axios.get(`https://swapi.dev/api/films/2/`);
+    const personsLink = charactersArr.data.characters.map((link) => {
+      const corrlink = link.replace('http', 'https');
+      return corrlink;
+    });
 
-    personsInfo.then((promisesArr) => {
-      promisesArr.map((promis, i) => {
-        promis.then((res) => {
-
-          const infoBlock = document.createElement('div');
-          const name = document.createElement('h2');
-          const birthday = document.createElement('h5');
-          const male = document.createElement('h5');
-
-          name.innerText = res.name;
-          birthday.innerText = 'Was born: ' + res.birthday;
-          male.innerText = 'Male: ' + res.male;
-
-          infoBlock.classList.add('infoBlock');
-
-          wrapper.append(infoBlock);
-          infoBlock.append(name, birthday, male);
-        });
+    const arrInfoPersons = personsLink.map((link) => {
+      return axios.get(link).then((res) => {
+        return {
+          name: res.data.name,
+          birthday: res.data.birth_year,
+          male: res.data.gender
+        };
       });
     });
 
+    const wrapper = document.createElement('div');
+    wrapper.classList.add('wrapper');
+
+    arrInfoPersons.forEach(async (person) => {
+      const obj = await person;
+      const infoBlock = document.createElement('div');
+      const name = document.createElement('h2');
+      const birthday = document.createElement('h5');
+      const male = document.createElement('h5');
+
+      name.innerText = obj.name;
+      birthday.innerText = 'Was born: ' + obj.birthday;
+      male.innerText = 'Male: ' + obj.male;
+
+      infoBlock.classList.add('infoBlock');
+      wrapper.append(infoBlock);
+      infoBlock.append(name, birthday, male);
+    });
     document.body.append(wrapper);
   }
   showPeopleBtn.removeEventListener('click', getPersonsInfo);
@@ -85,7 +66,7 @@ async function getPlanetsInfo() {
   nextBtn.classList.add('next-planets-btn');
   nextBtn.innerText = 'Next';
 
-  const planetInfo = await axios.get('https://swapi.dev/api/planets/');
+  const planetInfo = await axios.get("https://swapi.dev/api/planets/");
   const planetsDataArr = await planetInfo.data.results;
   const planetsNameList = planetsDataArr.map((planet) => planet.name);
 
