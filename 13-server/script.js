@@ -1,81 +1,74 @@
 const showPeopleBtn = document.querySelector('#show-people');
 const hidePeopleBtn = document.querySelector('#hide-people');
+const showPlanetBtn = document.querySelector('#show-planet');
+const hidePlanetBtn = document.querySelector('#hide-planet');
+const wrapper = document.querySelector('.person-wrapper');
+const filmId = document.querySelector('#film-Id');
+const infoBlock = document.querySelector('.planet-info-block');
+const nextBtn = document.querySelector('.next-planets-btn');
+let currentPage = 'https://swapi.dev/api/planets/';
 
-// Виводимо інформацію про персонажів 5 епізоду
-async function getPersonsInfo(event) {
-  if (event.target === showPeopleBtn) {
-    const charactersArr = await axios.get(`https://swapi.dev/api/films/2/`);
-    const personsLink = charactersArr.data.characters.map((link) => {
-      const corrlink = link.replace('http', 'https');
-      return corrlink;
+//Дістаєм інформацію про персонажів
+async function getPersonsInfo(filmId) {
+  const charactersArr = await axios.get(`https://swapi.dev/api/films/${filmId.value}/`);
+  const personsLinks = charactersArr.data.characters.map((link) => {
+    return link.replace('http', 'https');
+  });
+
+  const personsInfo = personsLinks.map((link) => {
+    return axios.get(link).then((res) => {
+      return {
+        name: res.data.name,
+        birthday: res.data.birth_year,
+        gender: res.data.gender
+      };
     });
+  });
 
-    const arrInfoPersons = personsLink.map((link) => {
-      return axios.get(link).then((res) => {
-        return {
-          name: res.data.name,
-          birthday: res.data.birth_year,
-          male: res.data.gender
-        };
-      });
-    });
+  return Promise.all(personsInfo);
+}
 
-    const wrapper = document.createElement('div');
-    wrapper.classList.add('wrapper');
+// Виводимо інформацію про персонажів епізоду
+function displayPersonsInfo(info) {
+  wrapper.innerHTML = '';
 
-    arrInfoPersons.forEach(async (person) => {
-      const obj = await person;
-      const infoBlock = document.createElement('div');
-      const name = document.createElement('h2');
-      const birthday = document.createElement('h5');
-      const male = document.createElement('h5');
+  info.forEach((person) => {
+    const obj = person;
+    const infoBlock = document.createElement('div');
+    const name = document.createElement('h2');
+    const birthday = document.createElement('h5');
+    const gender = document.createElement('h5');
+    infoBlock.classList.add('infoBlock');
+    wrapper.append(infoBlock);
 
-      name.innerText = obj.name;
-      birthday.innerText = 'Was born: ' + obj.birthday;
-      male.innerText = 'Male: ' + obj.male;
 
-      infoBlock.classList.add('infoBlock');
-      wrapper.append(infoBlock);
-      infoBlock.append(name, birthday, male);
-    });
-    document.body.append(wrapper);
-  }
-  showPeopleBtn.removeEventListener('click', getPersonsInfo);
-  hidePeopleBtn.addEventListener('click', hidePersonsInfo);
+    name.innerText = obj.name;
+    birthday.innerText = 'Was born: ' + obj.birthday;
+    gender.innerText = 'Male: ' + obj.gender;
+
+    infoBlock.append(name, birthday, gender);
+  });
+  document.body.append(wrapper);
 }
 
 // Ховаємо інформацію про персонажів
-function hidePersonsInfo(event) {
-  if (event.target === hidePeopleBtn) {
-    const info = document.querySelector('.wrapper');
-    info.remove();
-    showPeopleBtn.addEventListener('click', getPersonsInfo);
-    hidePeopleBtn.removeEventListener('click', hidePersonsInfo);
-  }
+function hidePersonsInfo() {
+  const info = document.querySelector('.person-wrapper');
+  if (!info) return;
+
+  info.remove();
 }
 
-showPeopleBtn.addEventListener('click', getPersonsInfo);
-hidePeopleBtn.addEventListener('click', hidePersonsInfo);
-
-// Дістаєм інформацію по планетах
-const showPlanetBtn = document.querySelector('#show-planet');
-const hidePlanetBtn = document.querySelector('#hide-planet');
-
-async function getPlanetsInfo() {
-  const nextBtn = document.createElement('button');
-  nextBtn.classList.add('next-planets-btn');
-  nextBtn.innerText = 'Next';
-
-  const planetInfo = await axios.get("https://swapi.dev/api/planets/");
+// Дістаєм інформацію по планетах та відображаєм 
+async function getPlanetsInfo(page = 'https://swapi.dev/api/planets/') {
+  currentPage = 'https://swapi.dev/api/planets/';
+  const planetInfo = await axios.get(page);
   const planetsDataArr = await planetInfo.data.results;
   const planetsNameList = planetsDataArr.map((planet) => planet.name);
 
-  const infoBlock = document.createElement('div');
-  infoBlock.classList.add('planet-info-block');
+  infoBlock.innerHTML = '';
 
   const infolist = document.createElement('ul');
-
-  document.body.append(infoBlock);
   infoBlock.append(infolist);
   infoBlock.append(nextBtn);
 
@@ -83,35 +76,43 @@ async function getPlanetsInfo() {
     const name = document.createElement('li');
     name.innerText = element;
     infolist.append(name);
-    name.classList.add('hide');
   });
+}
 
-  for (let i = 0; i < 5; i++) {
-    const planetName = document.querySelectorAll('li');
-    planetName[i].classList.remove('hide');
-  }
-
-  function showNextPlanetList() {
-    const planetName = document.querySelectorAll('li');
-    planetName.forEach(el => el.classList.add('hide'));
-    for (let i = 5; i < planetsNameList.length; i++) {
-      planetName[i].classList.remove('hide');
+//Додаєм обробники подій для персонажів
+showPeopleBtn.addEventListener('click', async () => {
+  try {
+    const personsInfo = await getPersonsInfo(filmId);
+    displayPersonsInfo(personsInfo);
+  } catch (error) {
+    if (error.response && error.response.status === 404) {
+      alert('Enter correct number of film (1-6)');
+    } else {
+      alert('Something went wrong, please, try later');
     }
   }
-  nextBtn.addEventListener('click', showNextPlanetList);
+});
+hidePeopleBtn.addEventListener('click', hidePersonsInfo);
 
-  showPlanetBtn.removeEventListener('click', getPlanetsInfo);
-  hidePlanetBtn.addEventListener('click', hidePlanetsInfo);
-}
+//Додаєм обробники подій для планет
+showPlanetBtn.addEventListener('click', () => {
+  getPlanetsInfo();
+  nextBtn.classList.remove('hide');
+});
+hidePlanetBtn.addEventListener('click', () => {
+  infoBlock.innerHTML = '';
+  nextBtn.classList.add('hide');
+});
 
-function hidePlanetsInfo(event) {
-  if (event.target === hidePlanetBtn) {
-    const info = document.querySelector('.planet-info-block');
-    info.remove();
-
-    showPlanetBtn.addEventListener('click', getPlanetsInfo);
-    hidePlanetBtn.removeEventListener('click', hidePlanetsInfo);
+// Кнопка з наступною сторінкою планет
+nextBtn.addEventListener('click', async () => {
+  const page = await axios.get(currentPage);
+  let nextPage = await page.data.next;
+  if (nextPage) {
+    nextPage = nextPage.replaceAll('http', 'https');
+    getPlanetsInfo(nextPage);
+    currentPage = nextPage;
+  } else {
+    nextBtn.outerHTML = '<h2>This is the end of the list of planets</h2>';
   }
-}
-
-showPlanetBtn.addEventListener('click', getPlanetsInfo);
+});

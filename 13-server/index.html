@@ -12,16 +12,21 @@
 </head>
 
 <body>
+  <h1>STAR WARS API</h1>
   <div class="btn-wrapper">
-
+    <input id="film-Id" placeholder="Enter number of episode">
     <button id="show-people" class="show-btn">Get info about people</button>
     <button id="hide-people" class="hide-btn">Hide info about people</button>
   </div>
 
   <div class="btn-wrapper">
-
     <button id="show-planet" class="show-btn">Get info about planet</button>
     <button id="hide-planet" class="hide-btn">Hide info about planet</button>
+  </div>
+
+  <div class="person-wrapper"></div>
+  <div class="planet-info-block">
+    <button class="next-planets-btn hide">Next</button>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
