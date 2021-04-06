@@ -55,7 +55,7 @@ input {
   width: 100%;
 }
 
-.infoBlock {
+.info-block {
   width: 20%;
   color: rgb(235, 166, 37);
   display: flex;

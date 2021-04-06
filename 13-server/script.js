@@ -6,7 +6,7 @@ const wrapper = document.querySelector('.person-wrapper');
 const filmId = document.querySelector('#film-Id');
 const infoBlock = document.querySelector('.planet-info-block');
 const nextBtn = document.querySelector('.next-planets-btn');
-let currentPage = 'https://swapi.dev/api/planets/';
+let nextPage = '';
 
 //Дістаєм інформацію про персонажів
 async function getPersonsInfo(filmId) {
@@ -33,37 +33,26 @@ function displayPersonsInfo(info) {
   wrapper.innerHTML = '';
 
   info.forEach((person) => {
-    const obj = person;
     const infoBlock = document.createElement('div');
     const name = document.createElement('h2');
     const birthday = document.createElement('h5');
     const gender = document.createElement('h5');
-    infoBlock.classList.add('infoBlock');
+
+    infoBlock.classList.add('info-block');
     wrapper.append(infoBlock);
 
-
-    name.innerText = obj.name;
-    birthday.innerText = 'Was born: ' + obj.birthday;
-    gender.innerText = 'Male: ' + obj.gender;
+    name.innerText = person.name;
+    birthday.innerText = 'Was born: ' + person.birthday;
+    gender.innerText = 'Male: ' + person.gender;
 
     infoBlock.append(name, birthday, gender);
   });
-  document.body.append(wrapper);
-}
-
-// Ховаємо інформацію про персонажів
-function hidePersonsInfo() {
-  const info = document.querySelector('.person-wrapper');
-  if (!info) return;
-
-  info.remove();
 }
 
 // Дістаєм інформацію по планетах та відображаєм 
 async function getPlanetsInfo(page = 'https://swapi.dev/api/planets/') {
-  currentPage = 'https://swapi.dev/api/planets/';
   const planetInfo = await axios.get(page);
-  const planetsDataArr = await planetInfo.data.results;
+  const planetsDataArr = planetInfo.data.results;
   const planetsNameList = planetsDataArr.map((planet) => planet.name);
 
   infoBlock.innerHTML = '';
@@ -77,6 +66,8 @@ async function getPlanetsInfo(page = 'https://swapi.dev/api/planets/') {
     name.innerText = element;
     infolist.append(name);
   });
+
+  nextPage = planetInfo.data.next;
 }
 
 //Додаєм обробники подій для персонажів
@@ -92,10 +83,10 @@ showPeopleBtn.addEventListener('click', async () => {
     }
   }
 });
-hidePeopleBtn.addEventListener('click', hidePersonsInfo);
+hidePeopleBtn.addEventListener('click', () => wrapper.innerHTML = '');
 
 //Додаєм обробники подій для планет
-showPlanetBtn.addEventListener('click', () => {
+showPlanetBtn.addEventListener('click', async () => {
   getPlanetsInfo();
   nextBtn.classList.remove('hide');
 });
@@ -106,13 +97,8 @@ hidePlanetBtn.addEventListener('click', () => {
 
 // Кнопка з наступною сторінкою планет
 nextBtn.addEventListener('click', async () => {
-  const page = await axios.get(currentPage);
-  let nextPage = await page.data.next;
-  if (nextPage) {
-    nextPage = nextPage.replaceAll('http', 'https');
-    getPlanetsInfo(nextPage);
-    currentPage = nextPage;
-  } else {
+  if (nextPage) getPlanetsInfo(nextPage.replace('http', 'https'));
+  else {
     nextBtn.outerHTML = '<h2>This is the end of the list of planets</h2>';
   }
 });
