@@ -5,6 +5,7 @@
 .pnp.js
 .idea/
 .vscode/
+*/node_modules
 
 
 # misc
